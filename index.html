@@ -13,13 +13,13 @@
         <nav class="navbar">
             <div class="container">
                 <div class="nav-top">
-                    <div class="logo">
+                    <a href="#" class="logo" aria-label="Ir al inicio">
                         <i class="fas fa-shopping-cart"></i>
                         <h1>Mercado Secuestrado</h1>
-                    </div>
+                    </a>
                     <div class="search-bar">
                         <input type="text" id="searchInput" placeholder="Buscar productos, marcas y más...">
-                        <button id="searchBtn" class="search-btn">
+                        <button id="searchBtn" class="search-btn" aria-label="Buscar productos" title="Buscar productos">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -40,7 +40,23 @@
                     </div>
                 </div>
                 <div class="nav-bottom">
-                    <ul class="nav-menu">
+                    <button id="navToggle" class="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="nav-menu" id="navMenu">
+                        <li class="nav-item has-submenu">
+                            <button class="submenu-toggle" aria-expanded="false" aria-controls="menuCategorias" title="Ver categorias">
+                                Categorias <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <ul class="submenu" id="menuCategorias">
+                                <li><a href="#productos" data-category="tecnologia">Tecnologia</a></li>
+                                <li><a href="#productos" data-category="hogar">Hogar</a></li>
+                                <li><a href="#productos" data-category="moda">Moda</a></li>
+                                <li><a href="#productos" data-category="gaming">Gaming</a></li>
+                                <li><a href="#productos" data-category="vehiculos">Vehiculos</a></li>
+                                <li><a href="#productos" data-category="libros">Libros</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#productos">Productos</a></li>
                         <li><a href="#servicios">Servicios</a></li>
                         <li><a href="#ofertas">Ofertas del día</a></li>
@@ -254,6 +270,14 @@
         </div>
     </section>
 
+    <!-- Historial -->
+    <section id="historial" class="products-section">
+        <div class="container">
+            <h2 class="section-title">Historial de Actividad</h2>
+            <p class="team-description">Pronto podras ver aqui tus ultimas busquedas y visitas.</p>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -321,7 +345,7 @@
     </footer>
 
     <!-- Botón volver arriba -->
-    <button id="scrollTopBtn" class="scroll-top-btn">
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Volver arriba" title="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>
 

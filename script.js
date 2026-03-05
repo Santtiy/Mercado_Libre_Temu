@@ -328,6 +328,26 @@ function inicializarNavbar() {
         setSubmenuOpen(false);
     };
 
+    const moverIndicador = (targetLink) => {
+        if (!targetLink || window.innerWidth <= 768) {
+            navMenu.style.setProperty('--indicator-opacity', '0');
+            return;
+        }
+
+        const linkRect = targetLink.getBoundingClientRect();
+        const menuRect = navMenu.getBoundingClientRect();
+        const left = Math.max(0, linkRect.left - menuRect.left);
+
+        navMenu.style.setProperty('--indicator-left', `${left}px`);
+        navMenu.style.setProperty('--indicator-width', `${linkRect.width}px`);
+        navMenu.style.setProperty('--indicator-opacity', '1');
+    };
+
+    const moverIndicadorActivo = () => {
+        const activeLink = document.querySelector('.nav-menu > li > a.active');
+        moverIndicador(activeLink || navLinks[0]);
+    };
+
     navToggle.addEventListener('click', () => {
         const abierto = navMenu.classList.toggle('show');
         actualizarEstadoBoton(abierto);
@@ -338,6 +358,7 @@ function inicializarNavbar() {
             const activo = link.getAttribute('href') === `#${idSeccion}`;
             link.classList.toggle('active', activo);
         });
+        moverIndicadorActivo();
     };
 
     const activarSeccionActual = () => {
@@ -383,7 +404,12 @@ function inicializarNavbar() {
                 cerrarMenuMovil();
             }
         });
+
+        link.addEventListener('mouseenter', () => moverIndicador(link));
+        link.addEventListener('focus', () => moverIndicador(link));
     });
+
+    navMenu.addEventListener('mouseleave', moverIndicadorActivo);
 
     if (submenuToggle && submenuContainer) {
         submenuToggle.addEventListener('click', () => {
@@ -439,6 +465,7 @@ function inicializarNavbar() {
 
     sections.forEach(section => navbarObserver.observe(section));
     activarSeccionActual();
+    moverIndicadorActivo();
 
     if (logo) {
         logo.addEventListener('click', (e) => {
@@ -489,6 +516,7 @@ function inicializarNavbar() {
             setSubmenuOpen(false);
         }
         activarSeccionActual();
+        moverIndicadorActivo();
     });
 
     window.addEventListener('scroll', activarSeccionActual, { passive: true });

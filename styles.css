@@ -177,6 +177,23 @@ body {
     gap: 30px;
     justify-content: center;
     align-items: center;
+    position: relative;
+    --indicator-left: 0px;
+    --indicator-width: 0px;
+    --indicator-opacity: 0;
+}
+
+.nav-menu::after {
+    content: "";
+    position: absolute;
+    left: var(--indicator-left);
+    width: var(--indicator-width);
+    height: 3px;
+    bottom: -4px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #4a92fb, #2b78f4);
+    opacity: var(--indicator-opacity);
+    transition: left 0.28s ease, width 0.28s ease, opacity 0.2s ease;
 }
 
 .nav-item {
@@ -878,6 +895,7 @@ body {
         border-radius: 10px;
         padding: 14px;
         align-items: flex-start;
+        --indicator-opacity: 0;
     }
 
     .nav-menu.show {

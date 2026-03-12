@@ -455,11 +455,65 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+function inicializarFotoPerfil() {
+    const profilePhoto = document.querySelector('.profile-photo');
+
+    if (!profilePhoto) {
+        return;
+    }
+
+    profilePhoto.addEventListener('error', () => {
+        if (profilePhoto.dataset.fallbackApplied === 'true') {
+            return;
+        }
+
+        const fallbackSrc = profilePhoto.dataset.fallbackSrc;
+        if (fallbackSrc) {
+            profilePhoto.dataset.fallbackApplied = 'true';
+            profilePhoto.src = fallbackSrc;
+        }
+    });
+}
+
+function inicializarEnlaceGithubDinamico() {
+    const githubLinks = document.querySelectorAll('.member-github-link');
+
+    githubLinks.forEach((link) => {
+        const label = link.querySelector('.github-link-label');
+        const href = link.getAttribute('href') || '';
+
+        if (!label) {
+            return;
+        }
+
+        let usuario = '';
+        try {
+            const githubUrl = new URL(href);
+            usuario = githubUrl.pathname.replace(/\//g, '');
+        } catch (error) {
+            usuario = '';
+        }
+
+        const textoBase = usuario ? `Ver GitHub @${usuario}` : 'Ver GitHub';
+        label.textContent = textoBase;
+
+        link.addEventListener('mouseenter', () => {
+            label.textContent = 'Abrir perfil de GitHub';
+        });
+
+        link.addEventListener('mouseleave', () => {
+            label.textContent = textoBase;
+        });
+    });
+}
+
 // Inicializar la página
 document.addEventListener('DOMContentLoaded', () => {
     cargarProductos();
     cargarOfertas();
     iniciarContador();
+    inicializarFotoPerfil();
+    inicializarEnlaceGithubDinamico();
     
     // Mensaje de bienvenida en consola
     console.log('%c¡Bienvenido a Mercado Secuestrado!', 'color: #3483FA; font-size: 20px; font-weight: bold;');

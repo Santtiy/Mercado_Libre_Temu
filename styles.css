@@ -586,20 +586,30 @@ body {
 }
 
 .member-header-info h3 {
-    font-size: 2rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     margin-bottom: 6px;
 }
 
 .team-member-featured .member-role {
     margin-bottom: 0;
     font-size: 1.05rem;
+    font-weight: 400;
 }
 
 .team-member-featured .member-photo {
+    min-width: 82px;
+    min-height: 82px;
+    max-width: 82px;
+    max-height: 82px;
+    aspect-ratio: 1 / 1;
     width: 82px;
     height: 82px;
     margin-bottom: 0;
     border-width: 3px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .profile-photo-wrap {
@@ -691,6 +701,10 @@ body {
     font-weight: 600;
     font-size: 1.05rem;
     gap: 8px;
+}
+
+.member-social a.member-github-link i {
+    font-size: 1.2rem;
 }
 
 .member-social a.member-github-link:hover {
@@ -987,7 +1001,7 @@ body {
     }
 
     .member-header-info h3 {
-        font-size: 1.45rem;
+        font-size: 1.1rem;
     }
 
     .team-member-featured .member-photo {

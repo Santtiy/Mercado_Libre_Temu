@@ -674,6 +674,18 @@ body {
     color: white;
 }
 
+.placeholder-photo {
+    border-style: dashed;
+    animation: pulsePlaceholder 2s ease-in-out infinite;
+}
+
+.avatar-placeholder {
+    color: #6c7a89;
+    font-size: 0.85rem;
+    margin-top: -8px;
+    margin-bottom: 14px;
+}
+
 .team-member h3 {
     font-size: 1.5rem;
     margin-bottom: 5px;
@@ -734,6 +746,115 @@ body {
     background-color: var(--secondary-color);
     color: white;
     transform: scale(1.1);
+}
+
+/* Portafolio de Servicios */
+.portfolio-section {
+    background-color: var(--light-gray);
+    padding: 60px 0;
+    margin-bottom: 30px;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.portfolio-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px 25px 30px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.portfolio-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.portfolio-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary-color), #5a9ef8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+.portfolio-avatar i {
+    font-size: 2.5rem;
+}
+
+.portfolio-role {
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.portfolio-description {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.portfolio-services,
+.portfolio-techs {
+    margin-bottom: 15px;
+}
+
+.portfolio-services h4,
+.portfolio-techs h4 {
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: var(--dark-color);
+}
+
+.portfolio-services ul {
+    list-style: disc;
+    padding-left: 18px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.portfolio-services li {
+    margin-bottom: 4px;
+}
+
+.portfolio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.portfolio-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.portfolio-github i {
+    font-size: 1.2rem;
+}
+
+.portfolio-github:hover {
+    text-decoration: underline;
 }
 
 /* Footer */
@@ -1008,6 +1129,18 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes pulsePlaceholder {
+    0% {
+        box-shadow: 0 0 0 0 rgba(52, 131, 250, 0.3);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(52, 131, 250, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(52, 131, 250, 0);
     }
 }
 

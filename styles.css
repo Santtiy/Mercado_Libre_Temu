@@ -37,6 +37,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
+    animation: headerDrop 0.5s ease-out;
 }
 
 .navbar {
@@ -57,6 +58,7 @@ body {
     gap: 10px;
     color: var(--secondary-color);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .logo i {
@@ -150,11 +152,52 @@ body {
     padding-top: 10px;
 }
 
+.nav-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: white;
+    color: var(--dark-color);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.nav-toggle:hover {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
 .nav-menu {
     display: flex;
     list-style: none;
     gap: 30px;
     justify-content: center;
+    align-items: center;
+    position: relative;
+    --indicator-left: 0px;
+    --indicator-width: 0px;
+    --indicator-opacity: 0;
+}
+
+.nav-menu::after {
+    content: "";
+    position: absolute;
+    left: var(--indicator-left);
+    width: var(--indicator-width);
+    height: 3px;
+    bottom: -4px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #4a92fb, #2b78f4);
+    opacity: var(--indicator-opacity);
+    transition: left 0.28s ease, width 0.28s ease, opacity 0.2s ease;
+}
+
+.nav-item {
+    position: relative;
 }
 
 .nav-menu a {
@@ -162,10 +205,102 @@ body {
     color: var(--dark-color);
     font-weight: 500;
     transition: color 0.3s;
+    padding-bottom: 6px;
+    border-bottom: 2px solid transparent;
+}
+
+.submenu-toggle {
+    border: none;
+    background: none;
+    color: var(--dark-color);
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+}
+
+.submenu-toggle i {
+    font-size: 0.8rem;
+    transition: transform 0.25s ease;
+}
+
+.submenu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    min-width: 190px;
+    list-style: none;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: var(--shadow-hover);
+    padding: 10px;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1200;
+}
+
+.submenu li {
+    margin-bottom: 4px;
+}
+
+.submenu li:last-child {
+    margin-bottom: 0;
+}
+
+.submenu a {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-bottom: none;
+}
+
+.submenu a:hover,
+.submenu a:focus-visible {
+    background-color: var(--light-gray);
+}
+
+.has-submenu:hover .submenu,
+.has-submenu.open .submenu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.has-submenu.open .submenu-toggle i {
+    transform: rotate(180deg);
 }
 
 .nav-menu a:hover {
     color: var(--secondary-color);
+}
+
+.nav-menu a.active {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+}
+
+.submenu-toggle:hover,
+.submenu-toggle[aria-expanded="true"] {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+}
+
+.nav-menu a:focus-visible,
+.submenu-toggle:focus-visible,
+.nav-toggle:focus-visible,
+.search-btn:focus-visible,
+.logo:focus-visible {
+    outline: 3px solid rgba(52, 131, 250, 0.35);
+    outline-offset: 3px;
+    border-radius: 8px;
 }
 
 /* Banner Hero */
@@ -872,8 +1007,63 @@ body {
     }
 
     .nav-menu {
-        flex-wrap: wrap;
-        gap: 15px;
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 14px;
+        background-color: white;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 14px;
+        align-items: flex-start;
+        --indicator-opacity: 0;
+    }
+
+    .nav-menu.show {
+        display: flex;
+    }
+
+    .nav-menu a {
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+    }
+
+    .nav-item,
+    .has-submenu {
+        width: 100%;
+    }
+
+    .submenu-toggle {
+        width: 100%;
+        justify-content: space-between;
+        padding: 8px 0;
+    }
+
+    .submenu {
+        position: static;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        box-shadow: none;
+        border: 1px solid var(--border-color);
+        margin-top: 8px;
+        width: 100%;
+        display: none;
+    }
+
+    .has-submenu.open .submenu {
+        display: block;
+    }
+
+    .nav-bottom {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-toggle {
+        display: inline-flex;
+        align-self: flex-end;
     }
 
     .banner-content h2 {
@@ -940,6 +1130,7 @@ body {
     }
     100% {
         box-shadow: 0 0 0 0 rgba(52, 131, 250, 0);
+
     }
 }
 

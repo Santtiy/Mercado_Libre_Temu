@@ -3,6 +3,8 @@ const productosData = [
     {
         id: 1,
         nombre: "iPhone 14 Pro Max 256GB",
+        marca: "Apple",
+        categoria: "Celulares y Smartphones",
         precio: 4599000,
         descuento: 15,
         envioGratis: true,
@@ -12,6 +14,8 @@ const productosData = [
     {
         id: 2,
         nombre: "Samsung Smart TV 55'' 4K UHD",
+        marca: "Samsung",
+        categoria: "Televisores",
         precio: 2299000,
         descuento: 20,
         envioGratis: true,
@@ -21,6 +25,8 @@ const productosData = [
     {
         id: 3,
         nombre: "PlayStation 5 Digital Edition",
+        marca: "Sony",
+        categoria: "Consolas",
         precio: 2799000,
         descuento: 0,
         envioGratis: true,
@@ -30,6 +36,8 @@ const productosData = [
     {
         id: 4,
         nombre: "Laptop HP Pavilion 15.6'' i7",
+        marca: "HP",
+        categoria: "Computación",
         precio: 3499000,
         descuento: 10,
         envioGratis: true,
@@ -39,6 +47,8 @@ const productosData = [
     {
         id: 5,
         nombre: "Apple AirPods Pro 2da Gen",
+        marca: "Apple",
+        categoria: "Audio",
         precio: 899000,
         descuento: 12,
         envioGratis: true,
@@ -48,6 +58,8 @@ const productosData = [
     {
         id: 6,
         nombre: "Bicicleta Montaña GW 29''",
+        marca: "GW",
+        categoria: "Deportes",
         precio: 1299000,
         descuento: 25,
         envioGratis: false,
@@ -57,6 +69,8 @@ const productosData = [
     {
         id: 7,
         nombre: "Nevera Samsung 21 pies",
+        marca: "Samsung",
+        categoria: "Electrodomésticos",
         precio: 2199000,
         descuento: 18,
         envioGratis: true,
@@ -66,6 +80,8 @@ const productosData = [
     {
         id: 8,
         nombre: "Zapatillas Nike Air Max 2023",
+        marca: "Nike",
+        categoria: "Calzado",
         precio: 459000,
         descuento: 30,
         envioGratis: true,
@@ -122,6 +138,7 @@ const ofertasData = [
 // Variables globales
 let carrito = [];
 let productosCargados = 8;
+let navbarInicializado = false;
 
 // Función para formatear precio en pesos colombianos
 function formatearPrecio(precio) {
@@ -206,19 +223,30 @@ function buscarProductos() {
     const productsGrid = document.getElementById('productsGrid');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
 
+    const heroBanner = document.querySelector('.hero-banner');
+    const categoriesSection = document.querySelector('.categories');
+
     if (query === '') {
         sectionTitle.textContent = 'Productos Destacados';
         loadMoreBtn.style.display = 'block';
+        if (heroBanner) heroBanner.style.display = 'block';
+        if (categoriesSection) categoriesSection.style.display = 'block';
         cargarProductos();
         return;
     }
 
-    // Filtrar considerando múltiples factores (nombre, etc.)
+    // Filtrar considerando múltiples factores (nombre, categorías, etc.)
     const productosFiltrados = productosData.filter(producto => {
-        const matchNombre = producto.nombre.toLowerCase().includes(query);
-        // Aquí se podrían agregar más criterios de búsqueda (categorías, marcas)
-        return matchNombre;
+        const queryWords = query.split(' ');
+        const productoTexto = `${producto.nombre} ${producto.marca || ''} ${producto.categoria || ''}`.toLowerCase();
+        
+        // Verifica si TODAS las palabras de búsqueda están en el texto del producto
+        return queryWords.every(word => productoTexto.includes(word));
     });
+
+    // Ocultar elementos que no son relevantes durante la búsqueda (estilo Mercado Libre)
+    if (heroBanner) heroBanner.style.display = 'none';
+    if (categoriesSection) categoriesSection.style.display = 'none';
 
     // Actualizar título con cantidad de resultados al estilo ML
     sectionTitle.innerHTML = `<span style="font-weight: normal; font-size: 1.2rem;">${productosFiltrados.length} resultados para </span>"${searchInput.value}"`;
@@ -241,6 +269,12 @@ function buscarProductos() {
         const productosHTML = productosFiltrados.map(producto => crearProductoCard(producto)).join('');
         productsGrid.innerHTML = productosHTML;
     }
+
+    // Al buscar, hacer scroll suave hacia la sección de productos si no está visible
+    const productosSection = document.getElementById('productos');
+    if (productosSection) {
+        productosSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 // Botón de búsqueda
@@ -252,6 +286,243 @@ document.getElementById('searchInput').addEventListener('keypress', (e) => {
         buscarProductos();
     }
 });
+
+// Navbar: menu movil, seccion activa y navegacion principal
+function inicializarNavbar() {
+    if (navbarInicializado) {
+        return;
+    }
+
+    const navMenu = document.querySelector('.nav-menu');
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.querySelectorAll('.nav-menu > li > a');
+    const submenuLinks = document.querySelectorAll('.submenu a');
+    const submenuContainer = document.querySelector('.has-submenu');
+    const submenuToggle = document.querySelector('.submenu-toggle');
+    const logo = document.querySelector('.logo');
+    const heroButton = document.querySelector('.btn-primary');
+
+    if (!navMenu || !navToggle) {
+        return;
+    }
+
+    const actualizarEstadoBoton = (abierto) => {
+        navToggle.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', abierto ? 'Cerrar menu' : 'Abrir menu');
+        navToggle.innerHTML = abierto
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+    };
+
+    const setSubmenuOpen = (abierto) => {
+        if (!submenuContainer || !submenuToggle) {
+            return;
+        }
+        submenuContainer.classList.toggle('open', abierto);
+        submenuToggle.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    };
+
+    const cerrarMenuMovil = () => {
+        navMenu.classList.remove('show');
+        actualizarEstadoBoton(false);
+        setSubmenuOpen(false);
+    };
+
+    const moverIndicador = (targetLink) => {
+        if (!targetLink || window.innerWidth <= 768) {
+            navMenu.style.setProperty('--indicator-opacity', '0');
+            return;
+        }
+
+        const linkRect = targetLink.getBoundingClientRect();
+        const menuRect = navMenu.getBoundingClientRect();
+        const left = Math.max(0, linkRect.left - menuRect.left);
+
+        navMenu.style.setProperty('--indicator-left', `${left}px`);
+        navMenu.style.setProperty('--indicator-width', `${linkRect.width}px`);
+        navMenu.style.setProperty('--indicator-opacity', '1');
+    };
+
+    const moverIndicadorActivo = () => {
+        const activeLink = document.querySelector('.nav-menu > li > a.active');
+        moverIndicador(activeLink || navLinks[0]);
+    };
+
+    navToggle.addEventListener('click', () => {
+        const abierto = navMenu.classList.toggle('show');
+        actualizarEstadoBoton(abierto);
+    });
+
+    const setActiveLink = (idSeccion) => {
+        navLinks.forEach(link => {
+            const activo = link.getAttribute('href') === `#${idSeccion}`;
+            link.classList.toggle('active', activo);
+        });
+        moverIndicadorActivo();
+    };
+
+    const activarSeccionActual = () => {
+        const topOffset = window.scrollY + 140;
+        const sections = [...navLinks]
+            .map(link => link.getAttribute('href'))
+            .filter(href => href && href.startsWith('#'))
+            .map(href => document.querySelector(href))
+            .filter(Boolean);
+
+        let seccionActiva = sections[0];
+        sections.forEach(section => {
+            if (topOffset >= section.offsetTop) {
+                seccionActiva = section;
+            }
+        });
+
+        if (seccionActiva) {
+            setActiveLink(seccionActiva.id);
+        }
+    };
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            if (!href || !href.startsWith('#')) {
+                return;
+            }
+
+            const target = document.querySelector(href);
+            if (!target) {
+                return;
+            }
+
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            setActiveLink(href.slice(1));
+            if (window.innerWidth <= 768) {
+                cerrarMenuMovil();
+            }
+        });
+
+        link.addEventListener('mouseenter', () => moverIndicador(link));
+        link.addEventListener('focus', () => moverIndicador(link));
+    });
+
+    navMenu.addEventListener('mouseleave', moverIndicadorActivo);
+
+    if (submenuToggle && submenuContainer) {
+        submenuToggle.addEventListener('click', () => {
+            const abierto = submenuToggle.getAttribute('aria-expanded') === 'true';
+            setSubmenuOpen(!abierto);
+        });
+    }
+
+    submenuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector('#productos');
+            const categoryName = link.dataset.category || '';
+            const searchInput = document.getElementById('searchInput');
+
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+
+            if (searchInput && categoryName) {
+                searchInput.value = categoryName;
+                buscarProductos();
+            }
+
+            setActiveLink('productos');
+            if (window.innerWidth <= 768) {
+                cerrarMenuMovil();
+            } else {
+                setSubmenuOpen(false);
+            }
+        });
+    });
+
+    const sections = [...navLinks]
+        .map(link => link.getAttribute('href'))
+        .filter(href => href && href.startsWith('#'))
+        .map(href => document.querySelector(href))
+        .filter(Boolean);
+
+    const navbarObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setActiveLink(entry.target.id);
+            }
+        });
+    }, {
+        threshold: 0.35,
+        rootMargin: '-80px 0px -45% 0px'
+    });
+
+    sections.forEach(section => navbarObserver.observe(section));
+    activarSeccionActual();
+    moverIndicadorActivo();
+
+    if (logo) {
+        logo.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            activarSeccionActual();
+            if (window.innerWidth <= 768) {
+                cerrarMenuMovil();
+            }
+        });
+    }
+
+    if (heroButton) {
+        heroButton.addEventListener('click', () => {
+            const ofertas = document.getElementById('ofertas');
+            if (ofertas) {
+                ofertas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setActiveLink('ofertas');
+            }
+        });
+    }
+
+    document.addEventListener('click', (event) => {
+        const clickDentroNavbar = event.target.closest('.nav-bottom');
+        if (!clickDentroNavbar && window.innerWidth <= 768 && navMenu.classList.contains('show')) {
+            cerrarMenuMovil();
+        }
+
+        const clickEnSubmenu = event.target.closest('.has-submenu');
+        if (!clickEnSubmenu && submenuContainer && submenuContainer.classList.contains('open')) {
+            setSubmenuOpen(false);
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            if (navMenu.classList.contains('show')) {
+                cerrarMenuMovil();
+            }
+            setSubmenuOpen(false);
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            navMenu.classList.remove('show');
+            actualizarEstadoBoton(false);
+            setSubmenuOpen(false);
+        }
+        activarSeccionActual();
+        moverIndicadorActivo();
+    });
+
+    window.addEventListener('scroll', activarSeccionActual, { passive: true });
+
+    navbarInicializado = true;
+}
 
 // Contador de tiempo para ofertas
 function iniciarContador() {
@@ -300,6 +571,9 @@ scrollTopBtn.addEventListener('click', () => {
 // Smooth scroll para enlaces internos
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        if (this.closest('.nav-menu')) {
+            return;
+        }
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
@@ -457,6 +731,7 @@ document.head.appendChild(style);
 
 // Inicializar la página
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarNavbar();
     cargarProductos();
     cargarOfertas();
     iniciarContador();
@@ -494,24 +769,9 @@ document.getElementById('searchInput').addEventListener('input', () => {
         if (query.length > 2) {
             buscarProductos();
         } else if (query.length === 0) {
-            cargarProductos();
+            buscarProductos();
         }
     }, 500);
-});
-
-// Hacer el navbar responsive
-const navMenu = document.querySelector('.nav-menu');
-if (window.innerWidth < 768) {
-    navMenu.style.display = 'none';
-}
-
-// Detectar cambio de tamaño de ventana
-window.addEventListener('resize', () => {
-    if (window.innerWidth < 768) {
-        navMenu.style.display = 'none';
-    } else {
-        navMenu.style.display = 'flex';
-    }
 });
 
 console.log('✅ Mercado Secuestrado cargado correctamente');
